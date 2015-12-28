@@ -120,6 +120,12 @@ public class LuceneSerializer {
             @SuppressWarnings("unchecked") //This is the expected type
             Query rv = ((Constant<Query>) operation.getArg(0)).getConstant();
             return rv;
+        } else if (op == LuceneOps.BOOST) {
+            BoostElement element = (BoostElement) operation;
+
+            Query query = toQuery(element.getPredicate(), metadata);
+            query.setBoost(element.getBoostFactor().getConstant());
+            return query;
         }
         throw new UnsupportedOperationException("Illegal operation " + operation);
     }
